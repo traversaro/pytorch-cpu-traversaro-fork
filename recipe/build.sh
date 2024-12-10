@@ -171,7 +171,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     esac
     case ${cuda_compiler_version} in
         12.6)
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.7;8.9;9.0+PTX"
             ;;
         *)
             echo "unsupported cuda version. edit build.sh"
