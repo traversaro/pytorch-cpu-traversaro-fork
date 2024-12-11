@@ -144,6 +144,9 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
         # https://github.com/pytorch/pytorch/pull/121975
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/264
         export USE_PRIORITIZED_TEXT_FOR_LD=1
+        export TORCH_CUDA_ARCH_LIST_ARCH87="8.7;"
+    else
+        export TORCH_CUDA_ARCH_LIST_ARCH87=""
     fi
     # Even though cudnn is used for CUDA builds, it's good to enable
     # for MKLDNN for CUDA builds when CUDA builds are used on a machine
@@ -171,7 +174,7 @@ elif [[ ${cuda_compiler_version} != "None" ]]; then
     esac
     case ${cuda_compiler_version} in
         12.6)
-            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+            export TORCH_CUDA_ARCH_LIST="5.0;6.0;6.1;7.0;7.5;8.0;8.6;${TORCH_CUDA_ARCH_LIST_ARCH87}8.9;9.0+PTX"
             ;;
         *)
             echo "unsupported cuda version. edit build.sh"
