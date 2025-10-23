@@ -34,3 +34,7 @@ megabuild:
 - true      # [linux]
 - false     # [osx]
 - true      # [win]
+
+arm_variant_type:  # [linux and aarch64]
+  - sbsa           # [linux and aarch64]
+  - tegra          # [linux and aarch64]

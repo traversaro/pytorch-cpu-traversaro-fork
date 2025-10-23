@@ -4,9 +4,14 @@
 
 # Use a higher build number for the CUDA variant, to ensure that it's
 # preferred by conda's solver, and it's preferentially
-# installed where the platform supports it.
-{% if cuda_compiler_version != "None" %}
+# installed where the platform supports it, unless this is a tegra build,
+# to ensure that on linux-aarch64 unless the user specifies tegra explicitly the sbsa variant is installed
+{% if cuda_compiler_version != "None" and not (linux and aarch64 and arm_variant_type == "tegra") %}
 {% set build = build + 200 %}
+{% endif %}
+
+{% if linux and aarch64 and arm_variant_type == "tegra" %}
+{% set build = build + 150 %}
 {% endif %}
 
 {% if blas_impl == "mkl" %}
@@ -78,6 +83,7 @@ build:
 {% else %}
   skip: true  # [is_rc]
 {% endif %}
+  skip: true  # [linux and aarch64 and arm_variant_type == "tegra" and cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}  # [cuda_compiler_version != "None"]
   string: cpu_{{ blas_impl }}_h{{ PKG_HASH }}_{{ build }}                                                 # [cuda_compiler_version == "None"]
   detect_binary_files_with_prefix: false
@@ -119,6 +125,7 @@ requirements:
     - sccache   # [win]
     - grep      # [unix]
     - rsync     # [unix]
+    - arm-variant * {{ arm_variant_type }}  # [cuda_compiler_version != "None" and aarch64]
   host:
     # GPU requirements
     # building against the older version to satisfy test constraints
